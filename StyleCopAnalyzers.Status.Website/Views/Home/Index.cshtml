@@ -1,0 +1,72 @@
+﻿@using StyleCopAnalyzers.Status.Website.Models
+@using StyleCopAnalyzers.Status.Common
+@model MainViewModel
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<h2>This page is reporting the current status of <a href="https://github.com/DotNetAnalyzers/StyleCopAnalyzers">StyleCopAnalyzers</a></h2>
+<i asp-status="true" />
+<div class="table-responsive">
+    <table id="no-more-tables" class="table table-hover table-condensed">
+        <thead>
+            <tr>
+                <td>
+                    Category
+                </td>
+                <td>
+                    ID
+                </td>
+                <td>
+                    Title
+                </td>
+                <td>
+                    Has Implementation
+                </td>
+                <td>
+                    Status
+                </td>
+                <td style="overflow: visible; width: 0;">
+                    Code Fix
+                </td>
+                <td style="overflow: visible; width: 0;">
+                    Fix All
+                </td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.Diagnostics)
+            {
+                <tr class="">
+                    <td title="@item.Category" data-title="Category">
+                        <a asp-action="Index" asp-route-category="@item.Category" asp-route-sha1="@Model.CommitId">@item.Category.Replace("StyleCop.CSharp.", string.Empty)</a>
+                    </td>
+                    <td><a href="@item.HelpLink" data-title="ID">@item.Id</a></td>
+                    <td data-title="Title">@item.Title</td>
+                    <td data-title="Has Implementation">
+                        <a asp-action="Index" asp-route-sha1="@Model.CommitId" asp-route-hasImplementation="@item.HasImplementation">
+                            <status status="item.HasImplementation"/>
+                        </a>
+                    </td>
+                    <td data-title="Has Title">
+                        <a asp-action="Index" asp-route-sha1="@Model.CommitId" asp-route-status="@item.Status">
+                            @item.Status
+                        </a>
+                    </td>
+                    <td data-title="Code Fix">
+                        <a asp-action="Index" asp-route-sha1="@Model.CommitId" asp-route-codeFixStatus="@item.CodeFixStatus">
+                            <status current-code-fix-status="item.CodeFixStatus"/>
+                        </a>
+                        <span class="visible-xs-inline" style="padding-left: 5px;">@item.NoCodeFixReason</span>
+                    </td>
+                    <td data-title="Fix All Provider">
+                        <a asp-action="Index" asp-route-sha1="@Model.CommitId" asp-route-fixAllStatus="@item.FixAllStatus">
+                            <status current-fix-all-status="item.FixAllStatus"/>
+                        </a>
+                    </td>
+                </tr>
+             }
+        </tbody>
+    </table>
+</div>

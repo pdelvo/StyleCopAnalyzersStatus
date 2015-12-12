@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "StyleCopAnalyzers.Generator": {
+      "commandName": "StyleCopAnalyzers.Generator",
+      "commandLineArgs": "\"C:\\Users\\fisch\\Documents\\GitHub\\StyleCopAnalyzers\\StyleCopAnalyzers.sln\""
+    }
+  }
+}
