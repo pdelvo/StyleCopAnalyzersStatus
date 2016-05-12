@@ -209,6 +209,7 @@ namespace StyleCopAnalyzers.Status.Generator
 
             this.CodeFixProviders = ImmutableArray.Create(
                 codeFixTypes
+                .Where(t => t.GetCustomAttributes<ExportCodeFixProviderAttribute>().Any())
                 .Select(t => Activator.CreateInstance(t, true))
                 .OfType<CodeFixProvider>()
                 .Where(x => x != null)

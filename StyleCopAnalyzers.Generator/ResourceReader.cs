@@ -69,7 +69,10 @@ namespace StyleCopAnalyzers.Status.Generator
                     .Replace(Path.AltDirectorySeparatorChar, '.'), "resources")
                     .TrimStart('.');
 
-                descriptions.Add(ReadResource(relativePath, path));
+                if (!path.Contains("ChurnTesting"))
+                {
+                    descriptions.Add(ReadResource(relativePath, path));
+                }
             }
 
             return ImmutableArray.CreateRange(descriptions);
