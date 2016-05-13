@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Hosting;
-using Microsoft.Dnx.Runtime;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using StyleCopAnalyzers.Status.Website.Models;
@@ -15,13 +10,12 @@ namespace StyleCopAnalyzers.Status.Website
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
+        public Startup(IHostingEnvironment env)
         {
             // Setup configuration sources.
             var builder = new ConfigurationBuilder()
-                .SetBasePath(appEnv.ApplicationBasePath)
-                .AddJsonFile("appsettings.json")
-                .AddEnvironmentVariables();
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json");
             Configuration = builder.Build();
         }
 
@@ -32,11 +26,11 @@ namespace StyleCopAnalyzers.Status.Website
         {
             // Add MVC services to the services container.
             services.AddMvc();
-
-            services.Configure<StatusPageOptions>(Configuration);
-            services.AddCaching();
-
-            switch (Configuration.Get<StatusPageOptions>().DataProvider)
+            
+            services.Configure<StatusPageOptions>(options => Configuration.Bind(options));
+            services.AddMemoryCache();
+            
+            switch (ConfigurationBinder.GetValue<StatusPageOptions>(Configuration, "").DataProvider)
             {
                 case DataProvider.File:
                     services.AddSingleton<IDataResolver, FileDataResolver>();
@@ -52,7 +46,6 @@ namespace StyleCopAnalyzers.Status.Website
         // Configure is called after ConfigureServices is called.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.MinimumLevel = LogLevel.Information;
             loggerFactory.AddConsole();
             loggerFactory.AddDebug();
 
@@ -61,7 +54,6 @@ namespace StyleCopAnalyzers.Status.Website
             // Add the following to the request pipeline only in development environment.
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
                 // app.UseDeveloperExceptionPage();
             }
             else
@@ -70,9 +62,6 @@ namespace StyleCopAnalyzers.Status.Website
                 // send the request to the following path or controller action.
                 app.UseExceptionHandler("/Home/Error");
             }
-
-            // Add the platform handler to the request pipeline.
-            app.UseIISPlatformHandler();
 
             // Add static files to the request pipeline.
             app.UseStaticFiles();

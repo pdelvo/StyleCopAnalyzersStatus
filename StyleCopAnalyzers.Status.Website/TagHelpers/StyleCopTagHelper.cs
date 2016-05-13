@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNet.Razor.TagHelpers;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using StyleCopAnalyzers.Status.Common;
 
 namespace StyleCopAnalyzers.Status.Website.TagHelpers

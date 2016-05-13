@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNet.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.OptionsModel;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using StyleCopAnalyzers.Status.Common;
 using System;
@@ -43,8 +43,8 @@ namespace StyleCopAnalyzers.Status.Website.Models
             }
 
             string path = Path.Combine(this.options.DataDirectory, branch + ".json");
-
-            string json = System.IO.File.ReadAllText(hostingEnvironment.MapPath(path));
+            var fileInfo = hostingEnvironment.ContentRootFileProvider.GetFileInfo(path);
+            string json = System.IO.File.ReadAllText(fileInfo.PhysicalPath);
 
             var mainViewModel = new MainViewModel
             {

@@ -1,10 +1,10 @@
 ﻿using System.Linq;
-using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
 using StyleCopAnalyzers.Status.Website.Models;
 using StyleCopAnalyzers.Status.Common;
-using Microsoft.Extensions.OptionsModel;
+using Microsoft.Extensions.Options;
 using System.IO;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -31,7 +31,7 @@ namespace StyleCopAnalyzers.Status.Website.Controllers
         {
             if (sha1 != null && sha1.Contains('.'))
             {
-                return this.HttpBadRequest();
+                return this.BadRequest();
             }
 
             try
@@ -49,7 +49,7 @@ namespace StyleCopAnalyzers.Status.Website.Controllers
                 if (diagnostics.Length == 0)
                 {
                     // No entries found
-                    return this.HttpNotFound();
+                    return this.NotFound();
                 }
 
                 ViewBag.Diagnostics = diagnostics;
@@ -58,7 +58,7 @@ namespace StyleCopAnalyzers.Status.Website.Controllers
             }
             catch (IOException)
             {
-                return HttpNotFound();
+                return NotFound();
             }
         }
     }
