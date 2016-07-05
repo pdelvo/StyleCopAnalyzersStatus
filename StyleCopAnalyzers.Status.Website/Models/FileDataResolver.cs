@@ -13,9 +13,9 @@ namespace StyleCopAnalyzers.Status.Website.Models
 {
     public class FileDataResolver : IDataResolver
     {
-        IHostingEnvironment hostingEnvironment;
-        IMemoryCache memoryCache;
-        StatusPageOptions options;
+        private IHostingEnvironment hostingEnvironment;
+        private IMemoryCache memoryCache;
+        private StatusPageOptions options;
 
         public FileDataResolver(
             IHostingEnvironment hostingEnvironment,
@@ -44,7 +44,7 @@ namespace StyleCopAnalyzers.Status.Website.Models
 
             string path = Path.Combine(this.options.DataDirectory, branch + ".json");
             var fileInfo = hostingEnvironment.ContentRootFileProvider.GetFileInfo(path);
-            string json = System.IO.File.ReadAllText(fileInfo.PhysicalPath);
+            string json = File.ReadAllText(fileInfo.PhysicalPath);
 
             var mainViewModel = new MainViewModel
             {
@@ -52,7 +52,7 @@ namespace StyleCopAnalyzers.Status.Website.Models
                 CommitId = sha1
             };
 
-            return Task.FromResult(memoryCache.Set<MainViewModel>(branch, mainViewModel, new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1) }));
+            return Task.FromResult(memoryCache.Set(branch, mainViewModel, new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1) }));
         }
     }
 }

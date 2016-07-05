@@ -1,14 +1,9 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Hosting;
-using Newtonsoft.Json;
-using StyleCopAnalyzers.Status.Website.Models;
-using StyleCopAnalyzers.Status.Common;
-using Microsoft.Extensions.Options;
-using System.IO;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
+﻿using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using StyleCopAnalyzers.Status.Common;
+using StyleCopAnalyzers.Status.Website.Models;
 
 namespace StyleCopAnalyzers.Status.Website.Controllers
 {

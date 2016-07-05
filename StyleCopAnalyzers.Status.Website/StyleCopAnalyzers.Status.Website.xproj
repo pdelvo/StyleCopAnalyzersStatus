@@ -9,7 +9,7 @@
     <ProjectGuid>78b961bb-224b-49f5-ad52-ac7277bdc12d</ProjectGuid>
     <RootNamespace>StyleCopAnalyzers.Status.Website</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">..\StyleCopAnalyzers.Generator\artifacts\obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
-    <OutputPath Condition="'$(OutputPath)'=='' ">..\StyleCopAnalyzers.Generator\artifacts\bin\$(MSBuildProjectName)\</OutputPath>
+    <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>
   </PropertyGroup>
   <PropertyGroup>
     <SchemaVersion>2.0</SchemaVersion>

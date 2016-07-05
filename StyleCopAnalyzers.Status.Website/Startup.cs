@@ -15,7 +15,8 @@ namespace StyleCopAnalyzers.Status.Website
             // Setup configuration sources.
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json");
+                .AddJsonFile("appsettings.json")
+                .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
 
@@ -54,7 +55,7 @@ namespace StyleCopAnalyzers.Status.Website
             // Add the following to the request pipeline only in development environment.
             if (env.IsDevelopment())
             {
-                // app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage();
             }
             else
             {

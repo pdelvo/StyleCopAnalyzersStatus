@@ -19,6 +19,7 @@ namespace StyleCopAnalyzers.Status.Generator
         /// <param name="args">The command line parameters.</param>
         internal static void Main(string[] args)
         {
+            
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
