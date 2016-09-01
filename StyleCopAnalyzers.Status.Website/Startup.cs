@@ -30,8 +30,9 @@ namespace StyleCopAnalyzers.Status.Website
             
             services.Configure<StatusPageOptions>(options => Configuration.Bind(options));
             services.AddMemoryCache();
-            
-            switch (ConfigurationBinder.GetValue<StatusPageOptions>(Configuration, "").DataProvider)
+
+            var value = ConfigurationBinder.GetValue<DataProvider>(Configuration, "DataProvider");
+            switch (value)
             {
                 case DataProvider.File:
                     services.AddSingleton<IDataResolver, FileDataResolver>();
@@ -47,15 +48,13 @@ namespace StyleCopAnalyzers.Status.Website
         // Configure is called after ConfigureServices is called.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole();
-            loggerFactory.AddDebug();
 
             // Configure the HTTP request pipeline.
 
             // Add the following to the request pipeline only in development environment.
+            app.UseDeveloperExceptionPage();
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
             }
             else
             {

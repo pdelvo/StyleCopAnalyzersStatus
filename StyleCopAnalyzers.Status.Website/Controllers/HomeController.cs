@@ -33,23 +33,17 @@ namespace StyleCopAnalyzers.Status.Website.Controllers
             {
                 MainViewModel viewModel = await this.dataResolver.ResolveAsync(sha1);
 
-                var diagnostics = (from x in viewModel.Diagnostics
-                                   where category == null || x.Category == category
-                                   where hasImplementation == null || x.HasImplementation == hasImplementation
-                                   where status == null || x.Status == status
-                                   where codeFixStatus == null || x.CodeFixStatus == codeFixStatus
-                                   where fixAllStatus == null || x.FixAllStatus == fixAllStatus
-                                   select x).ToArray();
+                var diagnostics = viewModel.Diagnostics;
 
-                if (diagnostics.Length == 0)
+                if (!diagnostics.Any())
                 {
                     // No entries found
                     return this.NotFound();
                 }
 
                 ViewBag.Diagnostics = diagnostics;
-
                 return this.View(viewModel);
+                return Content("foo");
             }
             catch (IOException)
             {

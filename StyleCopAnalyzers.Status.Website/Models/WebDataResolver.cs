@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using Newtonsoft.Json;
 using StyleCopAnalyzers.Status.Common;
+using System.Threading;
 
 namespace StyleCopAnalyzers.Status.Website.Models
 {
@@ -17,6 +18,7 @@ namespace StyleCopAnalyzers.Status.Website.Models
         IHostingEnvironment hostingEnvironment;
         IMemoryCache memoryCache;
         StatusPageOptions options;
+        SemaphoreSlim crawlLock = new SemaphoreSlim(1);
 
         public WebDataResolver(
             IHostingEnvironment hostingEnvironment,
@@ -42,19 +44,31 @@ namespace StyleCopAnalyzers.Status.Website.Models
             {
                 return model;
             }
-
-            Uri path = new Uri(new Uri(this.options.DataUri), branch + ".json");
-
-            HttpClient httpClient = new HttpClient();
-            string json = await httpClient.GetStringAsync(path);
-
-            var mainViewModel = new MainViewModel
+            await crawlLock.WaitAsync();
+            try
             {
-                Diagnostics = JsonConvert.DeserializeObject<IEnumerable<StyleCopDiagnostic>>(json),
-                CommitId = sha1
-            };
+                if (memoryCache.TryGetValue(branch, out model))
+                {
+                    return model;
+                }
 
-            return memoryCache.Set<MainViewModel>(branch, mainViewModel, new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1) });
+                Uri path = new Uri(new Uri(this.options.DataUri), branch + ".json");
+
+                HttpClient httpClient = new HttpClient();
+                string json = await httpClient.GetStringAsync(path);
+
+                var mainViewModel = new MainViewModel
+                {
+                    Diagnostics = JsonConvert.DeserializeObject<IEnumerable<StyleCopDiagnostic>>(json),
+                    CommitId = sha1
+                };
+
+                return memoryCache.Set<MainViewModel>(branch, mainViewModel, new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1) });
+            }
+            finally
+            {
+                crawlLock.Release();
+            }
         }
     }
 }
